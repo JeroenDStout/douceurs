@@ -95,7 +95,7 @@ with open(output_path_cpp, 'w') as f:
   f.write( " *                                                             *\n")
   f.write( " ***************************************************************/\n")
   f.write( "\n\n")
-  f.write( "namespace gaos::version {\n")
+  f.write( "namespace douceurs::version {\n")
   f.write( "\n\n")
   f.write( "    constexpr char const * get_compile_stamp() {\n")
   f.write( "        return (\n          \""

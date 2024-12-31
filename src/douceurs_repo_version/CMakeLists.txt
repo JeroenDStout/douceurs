@@ -1,16 +1,14 @@
-init_directory(repo_version)
+init_directory(douceurs_repo_version)
 
 # Define the Version project
-init_project(repo_version "meta")
+init_project(douceurs_repo_version "meta")
 
 # Sources static
-setup_project_source(repo_version "version"
-  src:
-    git_version.cpp
+setup_project_source(douceurs_repo_version "version"
   include:
     git_version.h GENERATED
 )
-setup_project_source(repo_version "script"
+setup_project_source(douceurs_repo_version "script"
   script:
     ../../touch
     generate_git_version.py
@@ -18,8 +16,7 @@ setup_project_source(repo_version "script"
 )
 
 # Target
-configure_project_static_lib(repo_version)
-configure_cxx_target(repo_version)
+configure_project_header_only(douceurs_repo_version)
 
 # Custom
 add_custom_command(
