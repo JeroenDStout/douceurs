@@ -256,6 +256,21 @@ function(configure_project_script project_ref)
 endfunction()
 
 
+function(configure_project_header_only project_ref)
+  set_project_source_list(${project_ref})
+  clean_project_source_for_build()
+  
+  message(STATUS "Configuring header-only project ${project_ref}")
+  print_all_project_sources()
+  
+  add_library(${project_ref} INTERFACE ${${project_source_list}})
+  target_include_directories(${project_ref} INTERFACE ${cmake_root_dir}/include ${CMAKE_BINARY_DIR}/gen/include)
+  install(TARGETS ${project_ref} DESTINATION ${cmake_root_dir}/bin)
+  set_target_properties(${project_ref} PROPERTIES FOLDER ${project_folder})
+  set_target_properties(${project_ref} PROPERTIES LINKER_LANGUAGE CXX)
+endfunction()
+
+
 #
 # Utility
 #
