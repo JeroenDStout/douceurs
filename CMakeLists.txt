@@ -21,6 +21,7 @@ include(cmake/generic/assets.cmake)
 include(cmake/generic/publish.cmake)
 
 # Subprojects
+add_subdirectory(src/douceurs)
 add_subdirectory(src/douceurs_repo_version)
 
 # Publication
