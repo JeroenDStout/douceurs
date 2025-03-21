@@ -4,6 +4,14 @@ init_directory(douceurs)
 init_project(douceurs "douceurs")
 
 # Sources static
+setup_project_source(douceurs "memory"
+  include:
+    template_buffer_alloc.h
+)
+setup_project_source(douceurs "io"
+  include:
+    slurp.h
+)
 setup_project_source(douceurs "strings"
   include:
     render_string.h
@@ -11,6 +19,11 @@ setup_project_source(douceurs "strings"
 setup_project_source(douceurs "reflection"
   include:
     refl_func.h
+)
+setup_project_source(douceurs "value"
+  include:
+    ref_value.h
+    def_value.h
 )
 
 # Target
