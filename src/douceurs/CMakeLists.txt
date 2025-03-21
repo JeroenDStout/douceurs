@@ -25,6 +25,10 @@ setup_project_source(douceurs "value"
     ref_value.h
     def_value.h
 )
+setup_project_source(douceurs "sugar"
+  include:
+    once.h
+)
 
 # Target
 configure_project_header_only(douceurs)

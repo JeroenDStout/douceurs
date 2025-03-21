@@ -5,7 +5,9 @@
  */
 
  #include "refl_func.h"
+ #include "once.h"
  #include <string_view>
+ #include <span>
 
 namespace douceurs::strings {
 
@@ -21,7 +23,7 @@ namespace douceurs::strings {
         if constexpr (sizeof...(runon) > 0)
           return fallback(runon...);
         else
-          return string;
+          return {};
     }
     
     struct render_dbg_vars_style_brief
@@ -30,6 +32,46 @@ namespace douceurs::strings {
     { static constexpr bool quote_key() { return true;  }};
 
     namespace detail {
+        template <typename style_t, typename stream_t, typename val_t>
+        inline void render_dbg_vars_value(stream_t &stream, val_t val);
+
+        // Add a span of values to a stream, see below
+        template <typename style_t, typename stream_t, typename val_t>
+        inline void render_dbg_vars_span(stream_t &stream, std::span<val_t>& span)
+        {
+            stream << "[";
+
+            sugar::once once;
+            for (const auto& elem : span)
+            {
+                if (!once()) stream << ", ";
+                render_dbg_vars_value<style_t>(stream, elem);
+            }
+
+            stream << "]";
+        }
+
+        // Add a variety of value types to a stream, see below
+        template <typename style_t, typename stream_t, typename val_t>
+        inline void render_dbg_vars_value(stream_t &stream, val_t val)
+        {
+            // Check if we can invoke the value with our stream...
+            if constexpr (requires { val(stream); })
+              val(stream);
+            // ...or whether we can invoke it without argument...
+            else if constexpr (requires { val(); })
+              stream << val();
+            // ...or whether we should render it as a span...
+            else if constexpr (requires { render_dbg_vars_span<style_t>(stream, val); })
+              render_dbg_vars_span<style_t>(stream, val);
+            // ...or whether we should render it as a string...
+            else if constexpr (std::is_convertible_v<val_t, std::string_view>)
+              stream << "\"" << val << "\"";
+            else
+            // ...or just add it to the stream
+              stream << val;
+        }
+
         // Implementation detail for render_dbg_vars, see below 
         template <bool first, typename style_t, typename stream_t, typename key_t, typename val_t, typename... runon_t>
         inline void render_dbg_vars_recursive(stream_t &stream, key_t key, val_t val, runon_t const & ... runon)
@@ -43,18 +85,7 @@ namespace douceurs::strings {
             else
               stream << key << " : ";
 
-            // Check if we can invoke the value with our stream...
-            if constexpr (std::is_invocable_v<val_t, stream_t&>)
-              val(stream);
-            // ...or whether we can invoke it without argument...
-            else if constexpr (std::is_invocable_v<val_t>)
-              stream << val();
-            // ...or whether we should render it as a string...
-            else if constexpr (std::is_convertible_v<val_t, std::string_view>)
-              stream << "\"" << val << "\"";
-            else
-            // ...or just add it to th estream
-              stream << val;
+            render_dbg_vars_value<style_t>(stream, val);
 
             // If we have more arguments, continue recursively
             if constexpr (sizeof...(runon) > 0)
