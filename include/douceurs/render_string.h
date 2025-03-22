@@ -3,28 +3,14 @@
 /*
  *  ...
  */
-
+ 
  #include "refl_func.h"
  #include "once.h"
+
  #include <string_view>
  #include <span>
 
 namespace douceurs::strings {
-
-    // For a list of string_view's...
-    //   Returns the first of a non-zero length
-    //   Failing that, it returns the last (empty) string_view
-    template <typename... runon_t>
-    inline std::string_view fallback(std::string_view const& string, runon_t const & ... runon)
-    {
-        if (string.size() > 0)
-          return string;
-
-        if constexpr (sizeof...(runon) > 0)
-          return fallback(runon...);
-        else
-          return {};
-    }
     
     struct render_dbg_vars_style_brief
     { static constexpr bool quote_key() { return false; }};
@@ -33,11 +19,11 @@ namespace douceurs::strings {
 
     namespace detail {
         template <typename style_t, typename stream_t, typename val_t>
-        inline void render_dbg_vars_value(stream_t &stream, val_t val);
+        inline void render_dbg_vars_value(stream_t &stream, val_t &val);
 
         // Add a span of values to a stream, see below
         template <typename style_t, typename stream_t, typename val_t>
-        inline void render_dbg_vars_span(stream_t &stream, std::span<val_t>& span)
+        inline void render_dbg_vars_span(stream_t &stream, std::span<val_t> const &span)
         {
             stream << "[";
 
@@ -53,7 +39,7 @@ namespace douceurs::strings {
 
         // Add a variety of value types to a stream, see below
         template <typename style_t, typename stream_t, typename val_t>
-        inline void render_dbg_vars_value(stream_t &stream, val_t val)
+        inline void render_dbg_vars_value(stream_t &stream, val_t &val)
         {
             // Check if we can invoke the value with our stream...
             if constexpr (requires { val(stream); })
@@ -74,7 +60,7 @@ namespace douceurs::strings {
 
         // Implementation detail for render_dbg_vars, see below 
         template <bool first, typename style_t, typename stream_t, typename key_t, typename val_t, typename... runon_t>
-        inline void render_dbg_vars_recursive(stream_t &stream, key_t key, val_t val, runon_t const & ... runon)
+        inline void render_dbg_vars_recursive(stream_t &stream, key_t &key, val_t &val, runon_t const & ... runon)
         {
             // Open or continue
             stream << (first ? "{ " : ", ");

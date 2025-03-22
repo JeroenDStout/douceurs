@@ -15,6 +15,7 @@ setup_project_source(douceurs "io"
 setup_project_source(douceurs "strings"
   include:
     render_string.h
+    string_view_manip.h
 )
 setup_project_source(douceurs "reflection"
   include:
