@@ -20,9 +20,10 @@ setup_project_source(douceurs "strings"
     string_conv.h
     string_conv_chrono.h
 )
-setup_project_source(douceurs "reflection"
+setup_project_source(douceurs "traits"
   include:
-    refl_func.h
+    traits_func.h
+    traits_container.h
 )
 setup_project_source(douceurs "value"
   include:

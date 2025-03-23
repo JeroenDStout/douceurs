@@ -11,10 +11,13 @@ namespace douceurs::io
     // Note we intentionally use std string, as ifstream requires a guaranteed 0-terminated string
     template<typename buffer_t>
     auto slurp(buffer_t &out_buffer, std::string path) -> slurp_ret
+      requires (sizeof(typename buffer_t::element_t) == 1)
     {
+        using element_t = typename buffer_t::element_t;
+
         try {
             std::ifstream file(path, std::ios_base::binary);
-            out_buffer.assign(std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>());
+            out_buffer.assign(std::istreambuf_iterator<element_t>(file), std::istreambuf_iterator<element_t>());
             return slurp_ret::success;
         }
         catch (...) {

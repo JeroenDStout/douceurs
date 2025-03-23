@@ -2,7 +2,7 @@
 
 #include <type_traits>
 
-namespace douceurs::reflection
+namespace douceurs::traits
 {
 	namespace detail
 	{
