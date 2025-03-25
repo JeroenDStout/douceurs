@@ -5,6 +5,8 @@ init_project(douceurs_repo_version "meta")
 
 # Sources static
 setup_project_source(douceurs_repo_version "version"
+  src:
+    douceurs_repo_version.cpp
   include:
     git_version.h GENERATED
 )
@@ -16,7 +18,8 @@ setup_project_source(douceurs_repo_version "script"
 )
 
 # Target
-configure_project_header_only(douceurs_repo_version)
+configure_project_static_lib(douceurs_repo_version)
+configure_cxx_target(douceurs_repo_version)
 
 # Custom
 add_custom_command(

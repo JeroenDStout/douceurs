@@ -4,6 +4,10 @@ init_directory(douceurs)
 init_project(douceurs "douceurs")
 
 # Sources static
+setup_project_source(douceurs "douceurs"
+  src:
+    douceurs.cpp
+)
 setup_project_source(douceurs "memory"
   include:
     template_buffer_alloc.h
@@ -36,4 +40,5 @@ setup_project_source(douceurs "sugar"
 )
 
 # Target
-configure_project_header_only(douceurs)
+configure_project_static_lib(douceurs)
+configure_cxx_target(douceurs)
