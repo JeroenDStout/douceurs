@@ -8,7 +8,8 @@ namespace douceurs::io
 
     enum class slurp_ret { success, failure };
 
-    // Note we intentionally use std string, as ifstream requires a guaranteed 0-terminated string
+    // Load an entire file into a templated buffer
+    // Buffer type is meant to be of the form seen in template_buffer_alloc.h
     template<typename buffer_t>
     auto slurp(buffer_t &out_buffer, std::string path) -> slurp_ret
       requires (sizeof(typename buffer_t::element_t) == 1)

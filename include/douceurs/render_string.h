@@ -16,24 +16,24 @@ namespace douceurs::strings {
     struct render_dbg_vars_style_json
     { static constexpr bool quote_key() { return true;  }};
 
+    // Add an array-like of values to a stream
+    template <typename style_t, typename stream_t, typename callback_t>
+    inline void render_dbg_vars_array(stream_t &stream, callback_t callback);
+
     namespace detail {
         template <typename style_t, typename stream_t, typename val_t>
         inline void render_dbg_vars_value(stream_t &stream, val_t &val);
 
         // Add a span of values to a stream, see below
         template <typename style_t, typename stream_t, typename val_t>
-        inline void render_dbg_vars_span(stream_t &stream, std::span<val_t> const &span)
+        inline void render_dbg_vars_span(stream_t &stream, std::span<val_t> span)
         {
-            stream << "[";
-
-            sugar::once once;
-            for (const auto& elem : span)
-            {
-                if (!once()) stream << ", ";
-                render_dbg_vars_value<style_t>(stream, elem);
-            }
-
-            stream << "]";
+            render_dbg_vars_array<style_t>(stream,
+              [span](auto callback) {
+                 for (auto const &elem : span)
+                   callback(elem);
+              }
+            );
         }
 
         // Add a variety of value types to a stream, see below
@@ -97,6 +97,22 @@ namespace douceurs::strings {
           detail::render_dbg_vars_recursive<true, style_t>(stream, runon...);
         else
           stream << "{}";
+    }
+
+    // Add an array-like of values to a stream
+    template <typename style_t, typename stream_t, typename callback_t>
+    inline void render_dbg_vars_array(stream_t &stream, callback_t callback)
+    {
+        stream << "[";
+
+        sugar::once once;
+        callback([&once, &stream](auto &val) {
+          if (!once())
+            stream << ", ";
+          detail::render_dbg_vars_value<style_t>(stream, val);
+        });
+
+        stream << "]";
     }
 
 }
