@@ -23,7 +23,7 @@ add_custom_command(
   COMMENT			"Generate git version file"
   OUTPUT    		${abs_gen_include}/git_version.h
                     ${abs_gen_script}/git_version.txt
-  COMMAND   		${Python3_EXECUTABLE}
+  COMMAND   		${Python_EXECUTABLE}
 					${abs_can_script}/generate_git_version.py
 					${abs_gen_include}/git_version.h
 					${abs_gen_script}/git_version.txt
