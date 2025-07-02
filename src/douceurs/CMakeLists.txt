@@ -7,6 +7,7 @@ init_project(douceurs "douceurs")
 setup_project_source(douceurs "memory"
   include:
     template_buffer_alloc.h
+	noalloc_stream.h
 )
 setup_project_source(douceurs "io"
   include:
@@ -17,6 +18,7 @@ setup_project_source(douceurs "strings"
     render_string.h
     string_view_manip.h
     string_conv.h
+    string_conv_chrono.h
 )
 setup_project_source(douceurs "reflection"
   include:

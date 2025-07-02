@@ -50,12 +50,15 @@ namespace douceurs::strings {
             // ...or whether we should render it as a span...
             else if constexpr (requires { render_dbg_vars_span<style_t>(stream, val); })
               render_dbg_vars_span<style_t>(stream, val);
+            // ...or an arithmetic type (which does not need quotation marks)...
+            else if constexpr (std::is_arithmetic_v<val_t>)
+              stream << val;
             // ...or whether we should render it as a string...
             else if constexpr (std::is_convertible_v<val_t, std::string_view>)
               stream << "\"" << val << "\"";
             else
             // ...or just add it to the stream
-              stream << val;
+              stream << "\"" << val << "\"";
         }
 
         // Implementation detail for render_dbg_vars, see below 
