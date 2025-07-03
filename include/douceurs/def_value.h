@@ -9,7 +9,7 @@ namespace douceurs::value {
         if constexpr (std::is_same_v<variable_t, ret_t>)
           return var;
         else if constexpr (requires { var(); })
-          return arg();
+          return var();
         else if constexpr (requires { var(arg...); })
           return var(arg...);
         else
